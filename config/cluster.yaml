@@ -1,0 +1,26 @@
+__default__:
+    h_vmem: 6G
+    h_rt:   24:00:00
+    pe: smp 1
+    R:  y
+
+
+icount_merge_bed:
+  h_vmem: 10G
+  h_rt: 24:00:00
+  pe: smp 1
+  R: y
+
+
+icount_peaks:
+  h_vmem: 12G
+  h_rt: 24:00:00
+  pe: smp 1
+  R: y
+
+
+iCount_cluster:
+  h_vmem: 12G
+  h_rt: 24:00:00
+  pe: smp 1
+  R: y

@@ -1,0 +1,22 @@
+
+#all files ending with .bed will be merged in this directory
+xlink_beds_input_dir: input_beds/
+
+output_directory: output/
+
+#prefix for name of combined BED files
+#e.g. will output {combined_prefix}.xl_sites.bed, {combined_prefix}.peaks.bed etc.
+combined_prefix: tdp43_combined_mm10
+
+#parsed into internal structure by iCount segment
+gtf_annotation: /path/to/gtf
+
+genome_index_fai: /path/to/genome/fasta/index
+
+peaks_fdr_threshold: 0.05
+
+peaks_n_permutations: 100
+
+peaks_half_window: 3
+
+peaks_group_by: gene_id
