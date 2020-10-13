@@ -14,8 +14,10 @@ input_beds = [os.path.join(indir, f) for f in os.listdir(indir) if f.endswith(".
 
 rule all:
     input:
-        outdir + "clusters/" + '.'.join(config['combined_prefix'], "clusters", "min_fdr_" + str(config['peaks_fdr_threshold']), "bed")
+        outdir + "clusters/" + '.'.join([config['combined_prefix'], "clusters", "min_fdr_" + str(config['peaks_fdr_threshold']), "bed"])
 
+
+#container: "docker://tomazc/icount"
 
 rule icount_segment:
     input:
@@ -23,15 +25,15 @@ rule icount_segment:
         genome_index,
 
     output:
-        outdir + "segment/" + gtf.rstrip(".gtf") + ".segmented.gtf"
+        outdir + "segment/" + os.path.basename(gtf).rstrip(".gtf") + ".segmented.gtf"
 
     params:
         outdir + "segment/iCount_segment_metrics.txt"
     log:
         outdir + "segment/iCount_segment.log"
 
-    container:
-        "docker://tomazc/icount"
+    #container: 
+    #    "docker://tomazc/icount"
 
     shell:
         """
@@ -54,8 +56,8 @@ rule icount_merge_bed:
     log:
         outdir + "group/iCount_group.log"
 
-    container:
-        "docker://tomazc/icount"
+    #container:
+    #    "docker://tomazc/icount"
 
     shell:
         """
@@ -69,14 +71,14 @@ rule icount_merge_bed:
 rule icount_peaks:
     input:
         xl_bed = outdir + "group/" + '.'.join([config['combined_prefix'], "xl_sites.bed"]),
-        segment_gtf = outdir + "segment/" + gtf.rstrip(".gtf") + ".segmented.gtf"
+        segment_gtf = outdir + "segment/" + os.path.basename(gtf).rstrip(".gtf") + ".segmented.gtf"
 
     output:
         outdir + "peaks/" + '.'.join([config['combined_prefix'], "peaks", "min_fdr_" + str(config['peaks_fdr_threshold']), "bed"])
 
     params:
         metrics = outdir + "peaks/iCount_peaks_metrics.log",
-        scores = outdir + "peaks/" + '.'.join([config['combined_prefix'], "scores", "tsv"])
+        scores = outdir + "peaks/" + '.'.join([config['combined_prefix'], "scores", "tsv"]),
         fdr_cutoff = config['peaks_fdr_threshold'],
         permutations = config['peaks_n_permutations'],
         half_window = config['peaks_half_window'],
@@ -85,8 +87,8 @@ rule icount_peaks:
     log:
         outdir + "peaks/iCount_peaks.log"
 
-    container:
-        "docker://tomazc/icount"
+    #container:
+    #    "docker://tomazc/icount"
 
     shell:
         """
@@ -108,7 +110,7 @@ rule icount_cluster:
         xl_peaks = outdir + "peaks/" + '.'.join([config['combined_prefix'], "peaks", "min_fdr_" + str(config['peaks_fdr_threshold']), "bed"])
 
     output:
-        outdir + "clusters/" + '.'.join(config['combined_prefix'], "clusters", "min_fdr_" + str(config['peaks_fdr_threshold']), "bed")
+        outdir + "clusters/" + '.'.join([config['combined_prefix'], "clusters", "min_fdr_" + str(config['peaks_fdr_threshold']), "bed"])
 
     params:
         outdir + "clusters/iCount_clusters_metrics.txt"
@@ -116,8 +118,8 @@ rule icount_cluster:
     log:
         outdir + "clusters/iCount_clusters.log"
 
-    container:
-        "docker://tomazc/icount"
+    #container:
+    #    "docker://tomazc/icount"
 
     shell:
         """
