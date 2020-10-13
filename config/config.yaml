@@ -1,5 +1,6 @@
 
-#all files ending with .bed will be merged in this directory
+#path to directory where xlink bed files you would like to merge are stored
+#all files ending with .bed in this directory will be passed to iCount group
 xlink_beds_input_dir: input_beds/
 
 output_directory: output/
@@ -11,7 +12,10 @@ combined_prefix: tdp43_combined_mm10
 #parsed into internal structure by iCount segment
 gtf_annotation: /path/to/gtf
 
+#Required for iCount segment
 genome_index_fai: /path/to/genome/fasta/index
+
+#Parameters for iCount peaks
 
 peaks_fdr_threshold: 0.05
 

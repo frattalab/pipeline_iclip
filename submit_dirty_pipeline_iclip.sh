@@ -10,10 +10,7 @@
 # join stdout and stderr output
 #$ -j y
 #$ -R y
-#$ -N mm10_icount_submit_dirty
+#$ -N iclip_pipeline_submit
 
 conda activate iCount
-snakemake -p -s pipeline_iclip.smk --cores 2 --rerun-incomplete 
-
-
-
+snakemake -p -s pipeline_iclip.smk --cores 2 --rerun-incomplete
