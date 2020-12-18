@@ -1,13 +1,14 @@
 # Snakemake Pipeline for processing iCLIP data
 
-Barebones, choppy pipeline to process iCLIP data. See below and config/config.yaml for basic usage instructions.
+Barebones, choppy pipeline to call peaks on iCLIP from cross-linked read BED files using [iCount](https://github.com/tomazc/iCount). See below and config/config.yaml for basic usage instructions.
 
-As it stands, I just want to merge BEDs of cross-link positions (downloaded from iMAPs web server (generated using iCount)) & identifying 'peaks' or significant x-link positions using iCount's randomisation approach.
+As it stands, I just want to merge BEDs of cross-link positions (can be generated using iCount, some data is available on from iMAPs web server) & identifying 'peaks' or significant x-link positions using iCount's randomisation approach.
 
-I wanted to use iCount's snakemake pipeline, but looks to be work in progress (not fully documented yet) and I also would've had to spend a bit of time re-naming files to match declarations in pipeline etc., and had some issues with it's ability to run on our cluster (if you care see my notes at end of readme on what I tried to do...)
+Before using this, I would recommend keeping an eye on the snakemake pipeline under development (see forks) in the main [iCount repo](https://github.com/tomazc/iCount). I was not convinced I could get it running for our purposes on the UCL CS cluster, and so this hacky pipeline was born.
+
+If you care, see my notes at end of readme on what I tried to do and other thoughts on why the main repo pipeline was unlikely to work...
 
 
-Only use this if you absolutely have to (you'll see why...)
 
 ## Setup instructions
 
@@ -17,6 +18,8 @@ Only use this if you absolutely have to (you'll see why...)
 conda env create -f=environment_icount.yaml
 ```
 
+Warning: this can be quite slow...
+
 2. **Activate iCount conda environment**
 
 ```
@@ -25,7 +28,7 @@ conda activate iCount
 
 3. **Clone the iCount github repository**
 
-You can use the fork I've made (https://github.com/SamBryce-Smith/iCount) or clone from the main Github respository. It doesn't really matter where you clone it to either, but for simplicities sake do it relative to this directory.
+You can use the fork I've made (https://github.com/SamBryce-Smith/iCount) or clone from the [main Github respository](https://github.com/tomazc/iCount). It doesn't really matter where you clone it to either, but for simplicities sake do it relative to this directory.
 
 ```
 git clone https://github.com/SamBryce-Smith/iCount
@@ -38,7 +41,7 @@ cd iCount
 pip install -e .[test]
 ```
 
-(Thanks for instructions in iCount readthedocs (under Contributing/Installation for development))
+(Thanks for instructions in [iCount readthedocs](https://icount.readthedocs.io/en/latest/contributing.html#installation-for-development))
 
 5. **See if have problem importing pysam at python interactive terminal**
 
@@ -60,14 +63,14 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>>
 ```
 
-at the shell, type
+At the interactive shell, type
 ```
 >>> import pysam
 ```
 If you don't get an error, you're free to skip to running the pipeline! If you get an error like
 
 ```
-put in the error message Sam! Conda is being very very slow...
+Put in the error message Sam! Conda is being very very slow...
 ```
 
 You can solve this by lying to samtools/pysam about libcrypto.so.1.0.0 being installed by soft-linking to libcrypto.so.1.1 (it still works perfectly with 1.1)
@@ -80,10 +83,9 @@ ls libcrypto*
 ln -s libcrypto.so.1.1 libcrypto.so.1.0.0
 ```
 
-Loading pysam at the interactive shell should now work!
+Loading pysam at the interactive shell should now work without erros!
 
-I got the solution from following issue (thanks zyllifeworld!)
-https://github.com/bioconda/bioconda-recipes/issues/12100
+I got the solution from the [following issue (thanks zyllifeworld!)](https://github.com/bioconda/bioconda-recipes/issues/12100).
 
 
 ## Running instructions
@@ -103,7 +105,7 @@ qsub submit_dirty_pipeline_iclip.sh
 
 feel free to change the job name specified in the script (by default it is set to `iclip_pipeline_submit`).
 
-When I work out a way to get an automatic installation working, I will switcht the the classical job-submit approach.
+When I work out a way to get an automatic installation working, I will switch the the classical job-submit approach.
 
 
 ### Venting about my difficulties with setting up iCount...
@@ -111,7 +113,7 @@ When I work out a way to get an automatic installation working, I will switcht t
 I tried... everything...
 1. As pipeline is on master (Oct 2020), the conda environment file is not declared for each rule, so `--use-conda` will not create conda environments for pipeline (i.e. can't run through submitted jobs). The env file also does not install iCount automatically, so it wouldn't work if I added `conda: "<env_file.yaml>"` to each rule.
 
-    1. I tried modifying env file to install iCount automatically via pip, but I left it running overnight and it still didn't resolve...
+    - I tried modifying env file to install iCount automatically via pip, but I left it running overnight and it still didn't resolve...
 
 2. Asking singularity to pull the docker container (and declaring it for each rule) didn't work. For whatever reason, the container singularity pulls/creates doesn't have iCount installed/available in $PATH (STAR does install, so something funky going on... Docker image run with Docker works perfectly on local machine though))
 

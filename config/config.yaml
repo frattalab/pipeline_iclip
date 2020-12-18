@@ -3,6 +3,7 @@
 #all files ending with .bed in this directory will be passed to iCount group
 xlink_beds_input_dir: input_beds/
 
+#Master output directory for files from this pipeline -
 output_directory: output/
 
 #prefix for name of combined BED files
@@ -10,12 +11,14 @@ output_directory: output/
 combined_prefix: tdp43_combined_mm10
 
 #parsed into internal structure by iCount segment
+#GTF annotation file of genes & transcripts for your species of study
 gtf_annotation: /path/to/gtf
 
 #Required for iCount segment
 genome_index_fai: /path/to/genome/fasta/index
 
 #Parameters for iCount peaks
+#Consult the iCount readthedocs for more info on what these different parameters control
 
 peaks_fdr_threshold: 0.05
 
