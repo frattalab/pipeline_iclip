@@ -4,7 +4,7 @@ Barebones, choppy pipeline to call peaks on iCLIP from cross-linked read BED fil
 
 As it stands, I just want to merge BEDs of cross-link positions (can be generated using iCount, some data is available on from iMAPs web server) & identifying 'peaks' or significant x-link positions using iCount's randomisation approach.
 
-Before using this, I would recommend keeping an eye on the snakemake pipeline under development (see forks) in the main [iCount repo](https://github.com/tomazc/iCount). I was not convinced I could get it running for our purposes on the UCL CS cluster, and so this hacky pipeline was born.
+Before using this, I would recommend keeping an eye on the snakemake pipeline under development (see forks) in the main [iCount repo](https://github.com/tomazc/iCount) and the now published [nf-core clip-seq pipeline](https://nf-co.re/clipseq). I was not convinced I could get it running for our purposes on the UCL CS cluster, and so this hacky pipeline was born.
 
 If you care, see my notes at end of readme on what I tried to do and other thoughts on why the main repo pipeline was unlikely to work...
 
@@ -118,3 +118,7 @@ I tried... everything...
 2. Asking singularity to pull the docker container (and declaring it for each rule) didn't work. For whatever reason, the container singularity pulls/creates doesn't have iCount installed/available in $PATH (STAR does install, so something funky going on... Docker image run with Docker works perfectly on local machine though))
 
 3. The latest version of iCount available through pip is 2.0.0, released in 2017. This actually won't install with a simple `pip install iCount` ([see issue I opened](https://github.com/tomazc/iCount/issues/199])). It turns out that this only version is tagged for up to python 3.5 (but conda env file and docker user specify python 3.6...)
+
+
+### To do
+icount is on bioconda - use that to install dependencies instead of the one-by-one approach
